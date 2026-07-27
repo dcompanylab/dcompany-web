@@ -681,6 +681,32 @@ ul { margin: 0; padding: 0; list-style: none; }
   line-height: 1.6;
 }
 
+/* Documentary photos with captions */
+.photo {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.photo img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+  background: var(--placeholder);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.photo figcaption {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  word-break: keep-all;
+}
+
 /* --------------------------------------------------------------------------
    9. Pillars (Solutions)
    -------------------------------------------------------------------------- */
