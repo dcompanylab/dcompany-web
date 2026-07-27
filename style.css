@@ -659,6 +659,28 @@ ul { margin: 0; padding: 0; list-style: none; }
   color: rgba(247, 249, 250, 0.55);
 }
 
+/* App screenshots (device mockups with transparent corners) */
+.app-shot {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.app-shot img {
+  width: 100%;
+  height: auto;
+  max-width: 260px;
+}
+.app-shot figcaption {
+  margin-top: 1rem;
+  text-align: center;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+}
+
 /* --------------------------------------------------------------------------
    9. Pillars (Solutions)
    -------------------------------------------------------------------------- */
