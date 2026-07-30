@@ -104,6 +104,152 @@
   }
 
   /* ------------------------------------------------------------------------
+     Dot matrix — a grid of dots whose size and opacity ride a flowing
+     value-noise field, so the surface reads as a slow organic swell rather
+     than a blinking grid. Canvas 2D, no dependencies.
+     ---------------------------------------------------------------------- */
+  function initDotMatrix() {
+    var canvas = document.querySelector('.dot-matrix');
+    if (!canvas || !canvas.getContext) return;
+
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    var SPACING = 22;      // px between dot centres
+    var MAX_RADIUS = 1.9;  // px at the crest of the wave
+    var SPEED = 0.0003;    // noise drift per millisecond
+
+    /* --- Value noise -----------------------------------------------------
+       Hash-based lattice with smoothstep interpolation. Two octaves breaks
+       up the grid without looking busy, and avoids shipping a Perlin
+       implementation for what is a background texture. */
+    function hash(x, y) {
+      var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+      return n - Math.floor(n);
+    }
+    function smooth(t) { return t * t * (3 - 2 * t); }
+    function noise(x, y) {
+      var xi = Math.floor(x);
+      var yi = Math.floor(y);
+      var xf = smooth(x - xi);
+      var yf = smooth(y - yi);
+      var a = hash(xi, yi);
+      var b = hash(xi + 1, yi);
+      var c = hash(xi, yi + 1);
+      var d = hash(xi + 1, yi + 1);
+      return (a + (b - a) * xf) * (1 - yf) + (c + (d - c) * xf) * yf;
+    }
+    function field(x, y, t) {
+      return noise(x * 0.9 + t, y * 0.9) * 0.65 +
+             noise(x * 2.3 - t * 0.6, y * 2.3 + t * 0.3) * 0.35;
+    }
+
+    var dpr = 1;
+    var cols = 0;
+    var rows = 0;
+    var offsetX = 0;
+    var offsetY = 0;
+    var cssW = 0;
+    var cssH = 0;
+
+    function measure() {
+      var rect = canvas.getBoundingClientRect();
+      /* Fall back to the hero's own box if the canvas has not been laid out
+         yet — this is what previously left the field permanently invisible. */
+      if (!rect.width || !rect.height) {
+        var host = canvas.parentElement;
+        rect = host ? host.getBoundingClientRect() : rect;
+      }
+      if (!rect.width || !rect.height) return false;
+
+      cssW = rect.width;
+      cssH = rect.height;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(cssW * dpr);
+      canvas.height = Math.round(cssH * dpr);
+
+      cols = Math.ceil(cssW / SPACING) + 1;
+      rows = Math.ceil(cssH / SPACING) + 1;
+      offsetX = (cssW - (cols - 1) * SPACING) / 2;
+      offsetY = (cssH - (rows - 1) * SPACING) / 2;
+      return true;
+    }
+
+    function draw(now) {
+      var t = now * SPEED;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, cssW, cssH);
+      ctx.fillStyle = '#36AE92';
+
+      for (var iy = 0; iy < rows; iy++) {
+        for (var ix = 0; ix < cols; ix++) {
+          var v = field(ix * 0.11, iy * 0.11, t);
+          /* Biased low so most of the field stays quiet and only the crests
+             brighten — that is what keeps it off the copy. */
+          var lift = Math.max(0, v - 0.42) / 0.58;
+          if (lift <= 0.02) continue;
+
+          ctx.globalAlpha = 0.07 + lift * 0.42;
+          ctx.beginPath();
+          ctx.arc(
+            offsetX + ix * SPACING,
+            offsetY + iy * SPACING,
+            0.5 + lift * MAX_RADIUS,
+            0, Math.PI * 2
+          );
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function start() {
+      if (!measure()) return false;
+      canvas.classList.add('is-running');
+      return true;
+    }
+
+    /* Layout may not be settled on first run; retry on the next frame and
+       again after load before giving up. */
+    if (!start()) {
+      window.requestAnimationFrame(function () {
+        if (!start()) window.addEventListener('load', start);
+      });
+    }
+
+    if (reducedMotion) {
+      draw(0);
+      window.addEventListener('resize', function () {
+        if (measure()) draw(0);
+      });
+      return;
+    }
+
+    var running = true;
+    function frame(now) {
+      if (running && cssW) draw(now);
+      window.requestAnimationFrame(frame);
+    }
+    window.requestAnimationFrame(frame);
+
+    /* Stop painting when the hero is off screen or the tab is hidden */
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        running = entries[0].isIntersecting && !document.hidden;
+      }, { threshold: 0 }).observe(canvas);
+    }
+    document.addEventListener('visibilitychange', function () {
+      running = !document.hidden;
+    });
+
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(measure, 150);
+    });
+  }
+
+  /* ------------------------------------------------------------------------
      Scroll reveal
      ---------------------------------------------------------------------- */
   function initReveal() {
@@ -247,6 +393,7 @@
   function init() {
     initNav();
     initHeader();
+    initDotMatrix();
     initReveal();
     initCounters();
     initForm();

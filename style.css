@@ -35,6 +35,9 @@
      through to the system Hangul face in every case. */
   --font-kr: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
   --font-display: 'Google Sans Flex', var(--font-kr), 'Helvetica Neue', Arial, sans-serif;
+  /* Hero statements only — Oswald is condensed, so it stays out of the
+     smaller headings where the narrower letterforms would cost legibility. */
+  --font-title: 'Oswald', var(--font-display);
   --font-body: 'Google Sans Flex', var(--font-kr), 'Segoe UI', Arial, sans-serif;
   --font-label: 'Roboto', var(--font-kr), 'Helvetica Neue', Arial, sans-serif;
 
@@ -219,7 +222,11 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-weight: 600;
   margin-right: 0.6em;
 }
-.section-dark .eyebrow { color: rgba(247, 249, 250, 0.6); }
+/* Any eyebrow on a dark ground. .page-hero was missing from this list, so
+   the subpage eyebrows were rendering in the light-mode muted grey against
+   dark ink — barely legible at roughly 1.5:1. */
+.section-dark .eyebrow,
+.page-hero .eyebrow { color: rgba(247, 249, 250, 0.6); }
 
 .section-head { max-width: 66ch; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
 .section-head h2 { font-size: clamp(1.875rem, 3.4vw, 2.625rem); }
@@ -438,9 +445,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 86% 10%, rgba(54, 174, 146, 0.18), transparent 55%),
-    linear-gradient(to right, rgba(247, 249, 250, 0.05) 1px, transparent 1px);
-  background-size: 100% 100%, 96px 100%;
+    radial-gradient(circle at 86% 10%, rgba(54, 174, 146, 0.18), transparent 55%);
   pointer-events: none;
 }
 /* The symbol, oversized and bled off the right edge, as ground texture */
@@ -456,6 +461,25 @@ ul { margin: 0; padding: 0; list-style: none; }
   opacity: 0.06;
   pointer-events: none;
 }
+/* Dot-matrix field — a grid of teal dots whose brightness and size drift on
+   flowing noise. Painted by script.js; sits above the colour wash and below
+   the copy column.
+
+   The canvas is laid out but transparent until the script confirms it is
+   drawing. It must NOT be display:none — a hidden element measures 0x0, so
+   the sizing step would fail and it would never appear. */
+.dot-matrix {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+  pointer-events: none;
+}
+.dot-matrix.is-running { opacity: 1; }
+
 .hero .container { position: relative; z-index: 1; }
 
 .hero-grid {
@@ -465,16 +489,19 @@ ul { margin: 0; padding: 0; list-style: none; }
   align-items: end;
 }
 
-/* The positioning statement carries the hero on its own — set large, tight
-   and stacked, with the middle lines in brand teal as the accent. */
-.hero-title {
-  font-size: clamp(2.125rem, 4.6vw, 3.375rem);
-  font-weight: 600;
-  line-height: 1.06;
-  letter-spacing: -0.03em;
+/* Hero statements across the whole site — home and every subpage — share one
+   treatment. Oswald is condensed, so it carries a lighter weight and looser
+   tracking than Google Sans to hold the same optical presence. */
+.hero-title,
+.page-hero h1 {
+  font-family: var(--font-title);
+  font-size: clamp(2.375rem, 5.4vw, 4rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
   color: var(--bg);
-  text-wrap: balance;
 }
+.hero-title { text-wrap: balance; }
 .hero-title em {
   font-style: normal;
   color: var(--teal);
@@ -570,6 +597,13 @@ ul { margin: 0; padding: 0; list-style: none; }
   height: 2px;
   background: linear-gradient(to right, var(--teal) 0 18%, transparent 18%);
 }
+/* A quiet teal wash across the ink so the subpage headers are not a flat
+   slab. Gradient only — no grid, no chips. */
+.page-hero {
+  background-image:
+    radial-gradient(circle at 88% 12%, rgba(54, 174, 146, 0.20), transparent 58%),
+    radial-gradient(ellipse 65% 80% at 4% 92%, rgba(54, 174, 146, 0.11), transparent 64%);
+}
 .page-hero::before {
   content: '';
   position: absolute;
@@ -583,12 +617,45 @@ ul { margin: 0; padding: 0; list-style: none; }
   pointer-events: none;
 }
 .page-hero .container { position: relative; z-index: 1; }
-.page-hero h1 {
-  font-size: clamp(2.125rem, 5vw, 3.375rem);
-  color: var(--bg);
-  max-width: 20ch;
-}
+/* Type treatment lives in the shared hero-statement rule; only the measure is
+   page-hero specific. Widened from 20ch so the underlined opening phrase,
+   which must not wrap, always has room on one line. */
+.page-hero h1 { max-width: 26ch; }
 .page-hero p { margin-top: 1.5rem; max-width: 60ch; color: var(--on-dark); }
+
+/* Underline that wipes in on load. Drawn as a background gradient rather
+   than a pseudo-element or text-decoration, so it animates cleanly and still
+   follows the phrase if it wraps to a second line. The rule sits beside the
+   text rather than behind it, so the full-strength brand teal is fine here. */
+.mark {
+  /* Thick marker stroke that rides up over the bottom of the letterforms,
+     the way a highlighter pen would. Only a sliver of each glyph sits on
+     teal, so the word stays legible off the dark ground above it. */
+  --mark-h: 0.36em;   /* thickness */
+  --mark-y: 0.1em;    /* lift off the bottom of the line box */
+  /* Keep the phrase on one line. Broken across two, each fragment would draw
+     and animate its own stroke instead of one continuous sweep. */
+  white-space: nowrap;
+  background-image: linear-gradient(var(--teal), var(--teal));
+  background-repeat: no-repeat;
+  background-position: 0 calc(100% - var(--mark-y));
+  background-size: 0 var(--mark-h);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  animation: mark-wipe 0.85s var(--ease) 0.3s forwards;
+}
+@keyframes mark-wipe {
+  from { background-size: 0 var(--mark-h); }
+  to { background-size: 100% var(--mark-h); }
+}
+
+/* No wipe for anyone who has asked motion to stop — show the end state. */
+@media (prefers-reduced-motion: reduce) {
+  .mark {
+    animation: none;
+    background-size: 100% var(--mark-h);
+  }
+}
 
 /* --------------------------------------------------------------------------
    7. Cards & grids
@@ -875,7 +942,20 @@ ul { margin: 0; padding: 0; list-style: none; }
   background: var(--ink);
   border: 2px solid var(--line-dark);
 }
-.phase-done::before { background: var(--teal); border-color: var(--teal); }
+/* A completed phase reads as ticked off: its rule turns teal and the node
+   becomes a filled disc carrying a check instead of a plain dot. */
+.phase-done { border-top-color: var(--teal); }
+.phase-done::before {
+  width: 18px;
+  height: 18px;
+  top: -9px;
+  border: 0;
+  background-color: var(--teal);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.6 6.3 4.9 8.6 9.4 3.7' fill='none' stroke='%23F7F9FA' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 11px 11px;
+}
 .phase-num {
   font-family: var(--font-label);
   font-size: 0.75rem;
@@ -1232,10 +1312,16 @@ ul { margin: 0; padding: 0; list-style: none; }
      runs as large as will fit without ever spilling the gutter. */
   .hero-title .brk-lg { display: none; }
   .hero-title {
-    font-size: clamp(1.875rem, 8.8vw, 2.875rem);
+    /* Oswald is condensed, so the two lines fit at a larger size than the
+       Google Sans setting allowed. Tracking matches the desktop rule. */
+    font-size: clamp(2rem, 9.6vw, 3.25rem);
     line-height: 1.1;
-    letter-spacing: -0.028em;
+    letter-spacing: -0.005em;
   }
+
+  /* The underlined phrase cannot wrap, so the subpage titles scale with the
+     viewport to keep the longest of them (25 characters) inside the gutter. */
+  .page-hero h1 { font-size: clamp(1.5rem, 7.4vw, 2.375rem); }
 }
 
 /* --------------------------------------------------------------------------
