@@ -854,6 +854,18 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-top: 1px solid var(--line);
 }
 .pillar:nth-child(even) .pillar-media { order: -1; }
+/* Pillar imagery — each file keeps its own aspect ratio instead of being forced
+   into one shared box. The app shot is a wide banner whose tagline and logotype
+   are baked into the artwork, so cropping it to 4:3 would cut into type; the
+   device and centre shots are already 4:3. Each pillar is its own band, so
+   differing media heights cost nothing in alignment. */
+.pillar-shot {
+  width: 100%;
+  height: auto;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
 .pillar-body h3 {
   font-size: clamp(1.5rem, 2.6vw, 2rem);
   margin-block: 1rem 1.25rem;
