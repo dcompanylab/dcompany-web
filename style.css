@@ -788,6 +788,11 @@ ul { margin: 0; padding: 0; list-style: none; }
   border: 1px solid var(--line);
   border-radius: var(--radius);
 }
+/* Where a partner supplies a photograph instead of a logo file, fill the box
+   and crop the flanks rather than leaving contain's empty bands — a photo has
+   hard edges, so the bands read as a mistake next to a white-ground logo. This
+   is the treatment .photo already gives photography elsewhere on the site. */
+.partner-photo { object-fit: cover; }
 
 /* App screenshots (device mockups with transparent corners) */
 .app-shot {
