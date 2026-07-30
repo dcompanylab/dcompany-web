@@ -340,15 +340,16 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 /* Brand lockup — symbol + wordmark set side by side.
-   Symbol height is ~1.6x the wordmark cap height, matching the supplied
-   stacked lockup's optical relationship. */
+   The wordmark carries the name, so it holds full size; the symbol is dialled
+   back to ~1.33x the wordmark cap height so the mark reads as a companion to
+   the type rather than competing with it. */
 .logo {
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
 }
 .logo-symbol {
-  height: 32px;
+  height: 28px;
   width: auto;
   transition: transform 0.3s var(--ease);
 }
