@@ -774,6 +774,21 @@ ul { margin: 0; padding: 0; list-style: none; }
   color: rgba(247, 249, 250, 0.55);
 }
 
+/* Partner logos — drop-in replacement for a .ph placeholder. The 5:2 box is
+   held so a card carrying a real logo keeps the same footprint as one still on
+   a placeholder, and contain guarantees the artwork is letterboxed rather than
+   cropped whatever aspect the supplied file happens to be. */
+.partner-logo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 2;
+  object-fit: contain;
+  object-position: center;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
 /* App screenshots (device mockups with transparent corners) */
 .app-shot {
   margin: 0;
