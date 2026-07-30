@@ -28,14 +28,15 @@
   --on-dark: rgba(247, 249, 250, 0.72);
   --placeholder: #E6EAED;
 
-  /* Type — Google Sans throughout. One family across display, body and the
-     small uppercase labels; the label role is separated by tracking and
-     weight rather than by a second typeface. Korean falls through to the
-     system Hangul face, which Google Sans does not cover. */
+  /* Type — Google Sans for display and body.
+
+     The small uppercase labels run in Roboto, loaded from Google Fonts so
+     every visitor sees the same thing regardless of platform. Korean falls
+     through to the system Hangul face in every case. */
   --font-kr: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
   --font-display: 'Google Sans Flex', var(--font-kr), 'Helvetica Neue', Arial, sans-serif;
   --font-body: 'Google Sans Flex', var(--font-kr), 'Segoe UI', Arial, sans-serif;
-  --font-label: 'Google Sans Flex', var(--font-kr), 'Segoe UI', Arial, sans-serif;
+  --font-label: 'Roboto', var(--font-kr), 'Helvetica Neue', Arial, sans-serif;
 
   /* Rhythm */
   --container: 1200px;
@@ -113,6 +114,33 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .skip-link:focus { left: 0; }
 
+/* Everything set in the label face runs bold. Helvetica ships Regular and
+   Bold only, so 700 is the one real step up — collected here rather than
+   repeated across two dozen rules. Weights declared later in a specific
+   rule still win. */
+.skip-link,
+.eyebrow,
+.link,
+.hero-meta,
+.card-index,
+.fact dt,
+.stat-label,
+.ph,
+.app-shot figcaption,
+.status,
+.pillar-note,
+.phase-num,
+.phase-range,
+.patent-no,
+.gantt-months,
+.gantt-label small,
+.gantt-bar,
+.field label,
+.field-error,
+.info-row dt,
+.footer-col h4,
+.footer-bottom { font-weight: 700; }
+
 /* --------------------------------------------------------------------------
    3. Layout primitives
    -------------------------------------------------------------------------- */
@@ -179,8 +207,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: block;
   font-family: var(--font-label);
   font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-weight: 700;
+  letter-spacing: 0.088em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 1.25rem;
@@ -256,7 +284,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   gap: 0.5rem;
   font-family: var(--font-label);
   font-size: 0.8125rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.044em;
   text-transform: uppercase;
   color: var(--teal-700);
   border-bottom: 1px solid var(--teal-line);
@@ -459,8 +487,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   margin-top: 1.75rem;
   font-family: var(--font-label);
   font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.044em;
   text-transform: uppercase;
   color: rgba(247, 249, 250, 0.6);
 }
@@ -590,7 +618,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .card-index {
   font-family: var(--font-label);
   font-size: 0.75rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.066em;
   text-transform: uppercase;
   color: var(--teal);
   margin-bottom: 1.75rem;
@@ -611,7 +639,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .fact dt {
   font-family: var(--font-label);
   font-size: 0.75rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.066em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -647,7 +675,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   margin-top: 0.875rem;
   font-family: var(--font-label);
   font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.044em;
   line-height: 1.6;
   text-transform: uppercase;
   color: rgba(247, 249, 250, 0.6);
@@ -669,7 +697,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   color: var(--muted);
   font-family: var(--font-label);
   font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.033em;
   line-height: 1.6;
 }
 .ph-dark {
@@ -696,7 +724,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   color: var(--muted);
   font-family: var(--font-label);
   font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.033em;
   line-height: 1.6;
 }
 
@@ -750,7 +778,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   gap: 0.55rem;
   font-family: var(--font-label);
   font-size: 0.6875rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.066em;
   text-transform: uppercase;
   padding: 0.35rem 0.7rem;
   border-radius: 2px;
@@ -776,7 +804,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   margin-top: 1.5rem;
   font-family: var(--font-label);
   font-size: 0.8125rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.022em;
   color: var(--teal-700);
 }
 
@@ -802,7 +830,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .eco-figure text {
   font-family: var(--font-label);
   font-size: 11px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.044em;
   text-transform: uppercase;
   fill: rgba(247, 249, 250, 0.82);
 }
@@ -851,7 +879,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .phase-num {
   font-family: var(--font-label);
   font-size: 0.75rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.077em;
   text-transform: uppercase;
   color: var(--teal);
   display: block;
@@ -884,7 +912,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .patent-no {
   font-family: var(--font-label);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--teal-700);
   letter-spacing: 0.02em;
 }
@@ -900,7 +928,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-bottom: 1px solid var(--line);
   font-family: var(--font-label);
   font-size: 0.6875rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.033em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -920,8 +948,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: block;
   font-family: var(--font-label);
   font-size: 0.6875rem;
-  font-weight: 400;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  letter-spacing: 0.033em;
   text-transform: uppercase;
   color: var(--muted);
   margin-top: 0.25rem;
@@ -935,7 +963,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   padding-inline: 0.75rem;
   font-family: var(--font-label);
   font-size: 0.6875rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.033em;
   color: var(--white);
   white-space: nowrap;
   transform-origin: left;
@@ -968,7 +996,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: block;
   font-family: var(--font-label);
   font-size: 0.6875rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.066em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 0.625rem;
@@ -1003,7 +1031,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   margin-top: 0.375rem;
   font-family: var(--font-label);
   font-size: 0.6875rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.022em;
   color: #B4453A;
 }
 .field.has-error input,
@@ -1032,7 +1060,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .info-row dt {
   font-family: var(--font-label);
   font-size: 0.6875rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.066em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 0.625rem;
@@ -1084,8 +1112,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .footer-col h4 {
   font-family: var(--font-label);
   font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-weight: 700;
+  letter-spacing: 0.077em;
   text-transform: uppercase;
   color: rgba(247, 249, 250, 0.5);
   margin-bottom: 1.25rem;
@@ -1107,7 +1135,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-top: 1px solid var(--line-dark);
   font-family: var(--font-label);
   font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.033em;
   color: rgba(247, 249, 250, 0.5);
 }
 
