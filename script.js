@@ -104,79 +104,6 @@
   }
 
   /* ------------------------------------------------------------------------
-     Custom cursor — teal arrow with an L:BRN name tag trailing it.
-     Pointer devices only; the native cursor is untouched otherwise.
-     ---------------------------------------------------------------------- */
-  function initCursor() {
-    var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (!finePointer) return;
-
-    var root = document.createElement('div');
-    root.className = 'cursor';
-    root.setAttribute('aria-hidden', 'true');
-    root.innerHTML =
-      '<svg class="cursor-arrow" viewBox="0 0 24 24" fill="none">' +
-      '<path d="M5.4 2.4 18.9 12.6 12.4 13.2 15.3 19.9 12.4 21.1 9.5 14.4 5.4 18.2Z" ' +
-      'fill="#36AE92" stroke="#F7F9FA" stroke-width="1.4" stroke-linejoin="round"/>' +
-      '</svg>' +
-      '<span class="cursor-label">LBRN</span>';
-    document.body.appendChild(root);
-    document.documentElement.classList.add('has-custom-cursor');
-
-    var targetX = -100;
-    var targetY = -100;
-    var x = targetX;
-    var y = targetY;
-    var running = false;
-
-    function draw() {
-      /* A touch of easing so the tag drifts behind the arrow the way a
-         live presence cursor does. */
-      var ease = reducedMotion ? 1 : 0.22;
-      x += (targetX - x) * ease;
-      y += (targetY - y) * ease;
-      root.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
-
-      if (Math.abs(targetX - x) > 0.1 || Math.abs(targetY - y) > 0.1) {
-        window.requestAnimationFrame(draw);
-      } else {
-        running = false;
-      }
-    }
-
-    function start() {
-      if (!running) {
-        running = true;
-        window.requestAnimationFrame(draw);
-      }
-    }
-
-    document.addEventListener('mousemove', function (event) {
-      targetX = event.clientX;
-      targetY = event.clientY;
-      root.classList.add('is-visible');
-
-      var hit = event.target.closest
-        ? event.target.closest('a, button, [role="button"], summary, label')
-        : null;
-      root.classList.toggle('is-pointer', Boolean(hit));
-      start();
-    }, { passive: true });
-
-    document.addEventListener('mouseleave', function () {
-      root.classList.remove('is-visible');
-    });
-    document.addEventListener('mouseenter', function () {
-      root.classList.add('is-visible');
-    });
-
-    /* A drag or a context menu can strand the marker — reset on blur. */
-    window.addEventListener('blur', function () {
-      root.classList.remove('is-visible');
-    });
-  }
-
-  /* ------------------------------------------------------------------------
      Scroll reveal
      ---------------------------------------------------------------------- */
   function initReveal() {
@@ -320,7 +247,6 @@
   function init() {
     initNav();
     initHeader();
-    initCursor();
     initReveal();
     initCounters();
     initForm();
