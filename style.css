@@ -341,12 +341,12 @@ ul { margin: 0; padding: 0; list-style: none; }
   gap: 0.7rem;
 }
 .logo-symbol {
-  height: 32px;
+  height: 26px;
   width: auto;
   transition: transform 0.3s var(--ease);
 }
 .logo-wordmark {
-  height: 21px;
+  height: 17px;
   width: auto;
 }
 .logo:hover .logo-symbol { transform: translateY(-2px); }
